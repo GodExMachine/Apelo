@@ -1,0 +1,63 @@
+@charset "UTF-8";
+
+:root {
+  --cor-primaria-roxo: #640176;
+  --cor-secundaria-amarelo: #FFD000;
+  --branco: #ffffff;
+  --cor-fonte-preto: #111;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #f5f5f5;
+  margin: 0;
+  padding: 20px;
+  color: #111;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Tabela */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+th, td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+th {
+  background: var(--cor-primaria-roxo);
+  color: #fff;
+}
+
+tr:hover {
+  background: #f1f1f1;
+}
+
+/* Botão padrão */
+a.botao, button.botao {
+  background: var(--cor-secundaria-amarelo);
+  color:var(--cor-fonte-preto);
+  padding: 6px 12px;
+  border-radius: 4px;
+  text-decoration: none;
+  display: inline-block;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  border: 1px solid var(--cor-secundaria-amarelo);
+}
+
+a.botao:hover, button.botao:hover {
+  background: var(--branco);
+  border: 1px solid var(--cor-secundaria-amarelo);
+}
