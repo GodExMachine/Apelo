@@ -8,6 +8,7 @@
       <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/estilo.css?v=1" />
 </head>
 <body>
+<%@ include file="/assets/paginas/menuDeslogado.jsp"%>
 
 <h2>Últimos Eventos</h2>
 
