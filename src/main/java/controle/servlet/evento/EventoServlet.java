@@ -24,7 +24,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.ArrayList;
 
-@WebServlet(urlPatterns = { "/cadastro-animal", "/inserir-evento", "/listar-eventos", "/homepage","/detalhes-animal" })
+@WebServlet(urlPatterns = { "/cadastro-animal", "/inserir-evento", "/listar-eventos", "/homepage","/detalhes-animal","/buscar-por-especie","/buscar-por-evento","/buscar-por-cidade","/buscar-por-data"})
 public class EventoServlet extends HttpServlet {
 
 	private EventoDao eventoDao;
@@ -71,6 +71,25 @@ public class EventoServlet extends HttpServlet {
 			case "/homepage":
 				mostrarHomepage(request, response);
 				break;
+				
+			case "/buscar-por-especie":
+			    buscarPorEspecie(request, response);
+			    break;
+			   
+			case "/buscar-por-evento":
+			    buscarPorEvento(request, response);
+			    break;
+
+			case "/buscar-por-cidade":
+			    buscarPorCidade(request, response);
+			    break;
+
+			case "/buscar-por-data":
+			    buscarPorData(request, response);
+			    break;
+    
+			    
+
 
 			default:
 				mostrarTelaErro404(request, response);
@@ -149,24 +168,19 @@ public class EventoServlet extends HttpServlet {
 	private void mostrarHomepage(HttpServletRequest request, HttpServletResponse response) 
 	        throws ServletException, IOException, SQLException {
 
-		List<Evento> eventos = eventoDao.listarUltimoEventoPorAnimal();
-		request.setAttribute("eventos", eventos);
+	    List<Object[]> eventos = eventoDao.listarUltimoEventoPorAnimal();
+
+	    request.setAttribute("eventos", eventos);
 
 	    RequestDispatcher dispatcher = request.getRequestDispatcher("homepage.jsp");
 	    dispatcher.forward(request, response);
 	}
-
-
 
 	private void mostrarTelaErro404(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		RequestDispatcher dispatcher = request.getRequestDispatcher("erro404.jsp");
 		dispatcher.forward(request, response);
 	}
-
-
-	
-	
 	
 	private void listarEventos(HttpServletRequest request, HttpServletResponse response)
 	        throws ServletException, IOException, SQLException {
@@ -188,6 +202,76 @@ public class EventoServlet extends HttpServlet {
 	    dispatcher.forward(request, response);
 	}
 
+	private void buscarPorEspecie(HttpServletRequest request, HttpServletResponse response) 
+	        throws ServletException, IOException, SQLException {
 
+	    String especie = request.getParameter("especie");
+	    List<Object[]> eventos = new ArrayList<>();
+
+	    if (especie != null && !especie.isEmpty()) {
+	        eventos = eventoDao.listarUltimoEventoPorAnimalPorEspecie(especie);
+	    }
+
+	  
+	    request.setAttribute("eventos", eventos);
+	    request.setAttribute("filtroSelecionado", especie);
+
+	    RequestDispatcher dispatcher = request.getRequestDispatcher("homepage.jsp");
+	    dispatcher.forward(request, response);
+	}
+
+	private void buscarPorEvento(HttpServletRequest request, HttpServletResponse response) 
+	        throws ServletException, IOException, SQLException {
+
+	    String tipoEvento = request.getParameter("tipo_evento");
+	    List<Object[]> eventos = new ArrayList<>();
+
+	    if (tipoEvento != null && !tipoEvento.isEmpty()) {
+	        eventos = eventoDao.listarUltimoEventoPorAnimalPorTipoEvento(tipoEvento);
+	    }
+
+	    request.setAttribute("eventos", eventos);
+	    request.setAttribute("filtroSelecionado", tipoEvento);
+
+	    RequestDispatcher dispatcher = request.getRequestDispatcher("homepage.jsp");
+	    dispatcher.forward(request, response);
+	}
+
+	private void buscarPorCidade(HttpServletRequest request, HttpServletResponse response) 
+	        throws ServletException, IOException, SQLException {
+
+	    String cidade = request.getParameter("cidade");
+	    List<Object[]> eventos = new ArrayList<>();
+
+	    if (cidade != null && !cidade.isEmpty()) {
+	        eventos = eventoDao.listarUltimoEventoPorAnimalPorCidade(cidade);
+	    }
+
+	    request.setAttribute("eventos", eventos);
+	    request.setAttribute("filtroSelecionado", cidade);
+
+	    RequestDispatcher dispatcher = request.getRequestDispatcher("homepage.jsp");
+	    dispatcher.forward(request, response);
+	}
+
+	private void buscarPorData(HttpServletRequest request, HttpServletResponse response) 
+	        throws ServletException, IOException, SQLException {
+
+	    String dataStr = request.getParameter("data_evento");
+	    List<Evento> eventos = new ArrayList<>();
+
+	    if (dataStr != null && !dataStr.isEmpty()) {
+	        LocalDate data = LocalDate.parse(dataStr);
+	        eventos = eventoDao.listarUltimoEventoPorAnimalPorData(data);
+	    }
+
+	    request.setAttribute("eventos", eventos);
+	    request.setAttribute("filtroSelecionado", dataStr);
+
+	    RequestDispatcher dispatcher = request.getRequestDispatcher("homepage.jsp");
+	    dispatcher.forward(request, response);
+	}
+
+	
 	
 }
