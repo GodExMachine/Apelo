@@ -64,7 +64,7 @@ CREATE TABLE evento (
     id_contato BIGINT,
     data_evento DATE NOT NULL,
     comentario TEXT,
-    tipo_evento VARCHAR(10),
+    tipo_evento VARCHAR(20),
     CONSTRAINT fk_usuario_evento FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT fk_endereco_evento FOREIGN KEY (id_endereco) REFERENCES endereco(id_endereco) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT fk_contato_evento FOREIGN KEY (id_contato) REFERENCES contato(id_contato) ON DELETE CASCADE ON UPDATE CASCADE
@@ -97,4 +97,5 @@ INNER JOIN (
     GROUP BY id_animal
 ) ult
 ON e.id_animal = ult.id_animal AND e.data_evento = ult.ultima_data;
+
 
