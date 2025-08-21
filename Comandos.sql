@@ -70,17 +70,17 @@ CREATE TABLE evento (
     CONSTRAINT fk_contato_evento FOREIGN KEY (id_contato) REFERENCES contato(id_contato) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-
 CREATE TABLE foto (
     id_foto BIGINT AUTO_INCREMENT PRIMARY KEY,
     id_usuario BIGINT NULL,
-    id_animal BIGINT NULL,
-    id_evento BIGINT NULL,
-    imagem LONGBLOB NOT NULL,
+    id_evento BIGINT NOT NULL,
+    byte_foto LONGBLOB NOT NULL,
+    extensao_foto VARCHAR(10) NOT NULL,
     CONSTRAINT fk_foto_usuario FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario),
-    CONSTRAINT fk_foto_animal FOREIGN KEY (id_animal) REFERENCES animal(id_animal),
-    CONSTRAINT fk_foto_evento FOREIGN KEY (id_evento) REFERENCES evento(id_evento)
+    CONSTRAINT fk_foto_evento FOREIGN KEY (id_evento) REFERENCES evento(id_evento) ON DELETE CASCADE
 );
+
+
 
 
 

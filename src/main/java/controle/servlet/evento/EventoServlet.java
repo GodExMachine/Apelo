@@ -12,6 +12,10 @@ import modelo.entidade.animal.Animal;
 import modelo.dao.usuario.UsuarioDao;
 import modelo.dao.usuario.UsuarioDaoImpl;
 import modelo.entidade.usuario.Usuario;
+import modelo.dao.foto.FotoDao;
+import modelo.dao.foto.FotoDaoImpl;
+import modelo.entidade.foto.Foto;
+
 
 
 import javax.servlet.ServletException;
@@ -23,7 +27,11 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ArrayList;
+import javax.servlet.annotation.MultipartConfig;
+import java.io.InputStream;
 
+
+@MultipartConfig
 @WebServlet(urlPatterns = { "/cadastro-animal", "/inserir-evento", "/listar-eventos", "/homepage","/detalhes-animal","/buscar-por-especie","/buscar-por-evento","/buscar-por-cidade","/buscar-por-data"})
 public class EventoServlet extends HttpServlet {
 
@@ -31,6 +39,8 @@ public class EventoServlet extends HttpServlet {
 	private EnderecoDao enderecoDao;
 	private AnimalDao animalDao;
 	private UsuarioDao usuarioDao;
+	private FotoDao fotoDao;
+
 
 
 	public void init() {
@@ -38,6 +48,8 @@ public class EventoServlet extends HttpServlet {
 		enderecoDao = new EnderecoDaoImpl();
 		animalDao = new AnimalDaoImpl();
 		usuarioDao = new UsuarioDaoImpl();
+		fotoDao = new FotoDaoImpl();
+
 
 	}
 
@@ -106,29 +118,28 @@ public class EventoServlet extends HttpServlet {
 		dispatcher.forward(request, response);
 	}
 
-	private void inserirEvento(HttpServletRequest request, HttpServletResponse response)
+
+
+	private void inserirEvento(HttpServletRequest request, HttpServletResponse response) 
 	        throws ServletException, IOException, SQLException {
 
-	    Long idUsuario = Long.parseLong(request.getParameter("idUsuario"));
 
-	
 	    String logradouro = request.getParameter("logradouro");
 	    String numero = request.getParameter("numero");
+	    String complemento = request.getParameter("complemento");
 	    String bairro = request.getParameter("bairro");
 	    String cidade = request.getParameter("cidade");
 	    String estado = request.getParameter("estado");
-	    String complemento = request.getParameter("complemento");
 	    String cep = request.getParameter("cep");
 
 	    Endereco endereco = new Endereco(null, logradouro, numero, complemento, bairro, cidade, estado, cep);
-
 
 	    Long idEndereco = enderecoDao.buscarIdEnderecoExistente(endereco);
 	    if (idEndereco == null) {
 	        idEndereco = enderecoDao.inserirEndereco(endereco);
 	    }
 
-	
+
 	    String especie = request.getParameter("especie");
 	    String raca = request.getParameter("raca");
 	    String cor = request.getParameter("cor");
@@ -137,17 +148,43 @@ public class EventoServlet extends HttpServlet {
 	    Animal animal = new Animal(null, especie, raca, cor, porte);
 	    Long idAnimal = animalDao.inserirAnimal(animal);
 
-	
+	 
+	    Usuario usuarioLogado = (Usuario) request.getSession().getAttribute("usuarioLogado");
+	    if (usuarioLogado == null) {
+	        response.sendRedirect("login.jsp");
+	        return;
+	    }
+	    Long idUsuario = usuarioLogado.getId();
+
+	    // ===== Evento =====
 	    LocalDate dataEvento = LocalDate.parse(request.getParameter("dataEvento"));
 	    String comentario = request.getParameter("comentario");
-
 	    String tipoEvento = request.getParameter("tipoEvento");
 
-	    Evento evento = new Evento(idUsuario, idEndereco, idAnimal, dataEvento, comentario, tipoEvento);
-	    eventoDao.inserirEvento(evento);
+	    Evento evento = new Evento(null, idUsuario, idEndereco, idAnimal, dataEvento, comentario, tipoEvento);
+	    Long idEvento = eventoDao.inserirEvento(evento);
 
+	    // ===== Foto =====
+	    Part parteFoto = request.getPart("foto");
+	    if (parteFoto != null && parteFoto.getSize() > 0) {
+	        try (InputStream is = parteFoto.getInputStream()) {
+	            byte[] dadosFoto = is.readAllBytes();
+
+	            String nomeArquivo = parteFoto.getSubmittedFileName();
+	            String extensao = "";
+	            if (nomeArquivo != null && nomeArquivo.contains(".")) {
+	                extensao = nomeArquivo.substring(nomeArquivo.lastIndexOf('.') + 1).toLowerCase();
+	            }
+
+	            Foto foto = new Foto(null, idEvento, idAnimal, dadosFoto, extensao);
+	            fotoDao.inserirFoto(foto);
+	        }
+	    }
+
+	   
 	    response.sendRedirect("index.jsp");
 	}
+
 
 	private void mostrarDetalhesAnimal(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException, SQLException {

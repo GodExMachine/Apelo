@@ -9,7 +9,8 @@
 </head>
 <body>
   <main class="form-container" role="main" aria-labelledby="formTitle">
-    <form action="inserir-evento" method="post">
+	   <form action="inserir-evento" method="post" enctype="multipart/form-data">
+
 
       <h1 id="formTitle" class="title">Cadastrar novo Animal</h1>
 
@@ -85,6 +86,8 @@
         <label for="comentario">Comentário</label>
         <textarea id="comentario" name="comentario" rows="4" placeholder="Digite um comentário sobre o evento"></textarea>
 
+		<label for="foto">Foto do Animal</label>
+		<input type="file" id="foto" name="foto" accept="image/*" />
 
 
         <button type="submit" class="btn-submit" aria-label="Cadastrar evento e animal">Cadastrar</button>
