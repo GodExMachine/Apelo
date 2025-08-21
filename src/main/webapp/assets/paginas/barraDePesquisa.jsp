@@ -1,6 +1,6 @@
-<div class="filtros">
+<div style="margin:10px;">
 			<div style="text-align: center; margin: 20px 0;">
-						<p><strong>Pesquisar por:</strong>	</p>
+						<p style="margin:5px;"><strong>Pesquisar por:</strong>	</p>
 
 						<!-- Menu opcaoes-->
 						<button type="button" class="botao"
