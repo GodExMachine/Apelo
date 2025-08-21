@@ -1,4 +1,4 @@
-<div>
+<div class="filtros">
 			<div style="text-align: center; margin: 20px 0;">
 						<p><strong>Pesquisar por:</strong>	</p>
 
