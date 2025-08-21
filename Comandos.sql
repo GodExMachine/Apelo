@@ -71,6 +71,16 @@ CREATE TABLE evento (
 );
 
 
+CREATE TABLE foto (
+    id_foto BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario BIGINT NULL,
+    id_animal BIGINT NULL,
+    id_evento BIGINT NULL,
+    imagem LONGBLOB NOT NULL,
+    CONSTRAINT fk_foto_usuario FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario),
+    CONSTRAINT fk_foto_animal FOREIGN KEY (id_animal) REFERENCES animal(id_animal),
+    CONSTRAINT fk_foto_evento FOREIGN KEY (id_evento) REFERENCES evento(id_evento)
+);
 
 
 
@@ -78,6 +88,7 @@ SELECT * FROM usuario;
 SELECT * FROM endereco;
 SELECT * FROM evento;
 SELECT * FROM animal;
+SELECT * FROM foto;
 
 SELECT u.*, e.*
 FROM usuario u

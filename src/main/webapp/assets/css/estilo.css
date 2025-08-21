@@ -70,4 +70,12 @@ a.botao:hover, button.botao:hover {
   border: 1px solid var(--cor-secundaria-amarelo);
 }
 
+.filtro{
+	
+	height: 30px;
+	
+}
+
+
+
 

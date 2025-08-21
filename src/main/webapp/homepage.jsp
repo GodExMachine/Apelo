@@ -10,6 +10,10 @@
 </head>
 <body>
 
+		
+
+
+
 
 		<c:if test="${empty sessionScope.usuarioLogado}">
 			<%@ include file="/assets/paginas/menuDeslogado.jsp"%>
@@ -61,5 +65,38 @@
 		</table>
 	</c:if>
 
+<button class="botao" id="botaoTopo"
+  style="position:fixed; bottom:10px; right:50%; 
+         width:40px; height:40px; 
+         background:#640176; color:#fff; 
+         font-size:26px; font-weight:bold; 
+         border:none;"
+  onclick="voltarAoTopo()">⬆</button>
+
+
+
 </body>
+
+<script>
+
+    window.onscroll = function() {
+      let botao = document.getElementById("botaoTopo");
+      if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+        botao.style.display = "block";
+      } else {
+        botao.style.display = "none";
+      }
+    };
+
+    function voltarAoTopo() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
+
+
+
 </html>
+
+
+
+

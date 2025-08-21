@@ -1,6 +1,6 @@
 <div style="margin:10px;">
 			<div style="text-align: center; margin: 20px 0;">
-						<p style="margin:5px;"><strong>Pesquisar por:</strong>	</p>
+						<p style=""><strong>Pesquisar por:</strong>	</p>
 
 						<!-- Menu opcaoes-->
 						<button type="button" class="botao"
@@ -23,11 +23,7 @@
 									<option value="">Selecione a espécie...</option>
 									<option value="Cachorro">Cachorro</option>
 									<option value="Gato">Gato</option>
-									<option value="Calopsita">Calopsita</option>
-									<option value="Coelho">Coelho</option>
-									<option value="Hamster">Hamster</option>
-									<option value="Papagaio">Papagaio</option>
-									<option value="Tartaruga">Tartaruga</option>
+
 								</select>
 								<button type="submit" class="botao">Pesquisar</button>
 							</form>
