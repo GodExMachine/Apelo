@@ -12,12 +12,13 @@ import java.sql.SQLException;
 
 public class AdocaoDaoImpl extends EventoDaoImpl implements AdocaoDao {
 
-	public void inserirAdocao(Adocao adocao) throws SQLException {
 	
-		ContatoDao contatoDao = new ContatoDaoImpl();
-		contatoDao.inserirContato(adocao.getContato());
+	public Long inserirAdocao(Adocao adocao) throws SQLException {
+	    ContatoDao contatoDao = new ContatoDaoImpl();
+	    contatoDao.inserirContato(adocao.getContato());
 
-
-		super.inserirEvento(adocao);
+	    
+	    return super.inserirEvento(adocao);
 	}
+
 }

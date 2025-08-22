@@ -23,13 +23,19 @@ public class FotoDaoImpl implements FotoDao {
 	    try (Connection con = conectarBanco();
 	         PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
+	      
 	        if (foto.getIdUsuario() == null) {
 	            ps.setNull(1, Types.BIGINT);
 	        } else {
 	            ps.setLong(1, foto.getIdUsuario());
 	        }
 
-	        ps.setLong(2, foto.getIdEvento()); 
+	       
+	        if (foto.getIdEvento() == null) {
+	            ps.setNull(2, Types.BIGINT);
+	        } else {
+	            ps.setLong(2, foto.getIdEvento());
+	        }
 
 	        ps.setBytes(3, foto.getByteFoto());
 	        ps.setString(4, foto.getExtensaoFoto());

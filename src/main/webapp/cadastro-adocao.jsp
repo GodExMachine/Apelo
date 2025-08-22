@@ -10,8 +10,8 @@
 </head>
 <body>
   <main class="form-container" role="main" aria-labelledby="formTitle">
-    <form action="inserir-adocao" method="post">
 
+ 	<form action="inserir-adocao" method="post" enctype="multipart/form-data">
       <h1 id="formTitle" class="title">Cadastrar Adoção</h1>
 
       <c:if test="${not empty sessionScope.usuarioLogado}">
@@ -67,10 +67,17 @@
 
         <label for="instagram">Instagram</label>
         <input type="text" id="instagram" name="instagram" placeholder="@usuario" />
+        
+        
+        
+        		<label for="foto">Foto do Animal</label>
+		<input type="file" id="foto" name="foto" accept="image/*" />
+
+        
 
         <h2 class="subtitle">Animal</h2>
 
-        <!--  info do animal  -->
+    
         <p><strong>Espécie:</strong> ${animal.especie}</p>
         <p><strong>Raça:</strong> ${animal.raca}</p>
         <p><strong>Cor:</strong> ${animal.cor}</p>

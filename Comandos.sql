@@ -73,12 +73,13 @@ CREATE TABLE evento (
 CREATE TABLE foto (
     id_foto BIGINT AUTO_INCREMENT PRIMARY KEY,
     id_usuario BIGINT NULL,
-    id_evento BIGINT NOT NULL,
+    id_evento BIGINT NULL,
     byte_foto LONGBLOB NOT NULL,
     extensao_foto VARCHAR(10) NOT NULL,
     CONSTRAINT fk_foto_usuario FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario),
     CONSTRAINT fk_foto_evento FOREIGN KEY (id_evento) REFERENCES evento(id_evento) ON DELETE CASCADE
 );
+
 
 
 

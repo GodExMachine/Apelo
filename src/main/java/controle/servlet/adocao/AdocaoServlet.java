@@ -10,12 +10,16 @@ import modelo.dao.endereco.EnderecoDao;
 import modelo.dao.endereco.EnderecoDaoImpl;
 import modelo.dao.evento.EventoDao;
 import modelo.dao.evento.EventoDaoImpl;
+import modelo.dao.foto.FotoDao;
+import modelo.dao.foto.FotoDaoImpl;
+
 
 import modelo.entidade.adocao.Adocao;
 import modelo.entidade.animal.Animal;
 import modelo.entidade.contato.Contato;
 import modelo.entidade.endereco.Endereco;
 import modelo.entidade.evento.Evento;
+import modelo.entidade.foto.Foto;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -27,7 +31,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.http.Part;
 
+
+
+@MultipartConfig
 @WebServlet(urlPatterns = {"/cadastro-adocao", "/inserir-adocao", "/listar-adocoes"})
 public class AdocaoServlet extends HttpServlet {
 
@@ -36,6 +45,7 @@ public class AdocaoServlet extends HttpServlet {
     private AnimalDao animalDao;
     private ContatoDao contatoDao;
     private EventoDao eventoDao;
+    private FotoDao fotoDao;
 
 
     public void init() {
@@ -44,6 +54,8 @@ public class AdocaoServlet extends HttpServlet {
         animalDao = new AnimalDaoImpl();
         contatoDao = new ContatoDaoImpl();
         eventoDao = new EventoDaoImpl();
+        fotoDao = new FotoDaoImpl();
+
     }
 
    
@@ -90,7 +102,6 @@ public class AdocaoServlet extends HttpServlet {
         dispatcher.forward(request, response);
     }
 
-
     private void inserirAdocao(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
 
@@ -102,14 +113,16 @@ public class AdocaoServlet extends HttpServlet {
 
         Long idUsuario = Long.parseLong(request.getParameter("idUsuario"));
 
-        Endereco endereco = new Endereco(null,
+        Endereco endereco = new Endereco(
+                null,
                 request.getParameter("logradouro"),
                 request.getParameter("numero"),
                 request.getParameter("complemento"),
                 request.getParameter("bairro"),
                 request.getParameter("cidade"),
                 request.getParameter("estado"),
-                request.getParameter("cep"));
+                request.getParameter("cep")
+        );
 
         Long idEndereco = enderecoDao.buscarIdEnderecoExistente(endereco);
         if (idEndereco == null) {
@@ -121,7 +134,7 @@ public class AdocaoServlet extends HttpServlet {
         contato.setInstagram(request.getParameter("instagram"));
 
         String tipoEvento = request.getParameter("tipoEvento");
-        
+
         Adocao adocao = new Adocao();
         adocao.setContato(contato);
         adocao.setIdUsuario(idUsuario);
@@ -131,16 +144,27 @@ public class AdocaoServlet extends HttpServlet {
         adocao.setComentario(request.getParameter("comentario"));
         adocao.setTipoEvento(tipoEvento);
 
-        adocaoDao.inserirAdocao(adocao);
-        
+        Long idEvento = adocaoDao.inserirAdocao(adocao);
+
+	     // FOTO
+	     Part parteFoto = request.getPart("foto");
+	     if (parteFoto != null && parteFoto.getSize() > 0) {
+	         byte[] dadosFoto = parteFoto.getInputStream().readAllBytes();
+	
+	         String nomeArquivo = parteFoto.getSubmittedFileName();
+	         String extensao = "";
+	         if (nomeArquivo != null && nomeArquivo.contains(".")) {
+	             extensao = nomeArquivo.substring(nomeArquivo.lastIndexOf('.') + 1).toLowerCase();
+	         }
+	
+	         Foto foto = new Foto(null, idUsuario, idEvento, dadosFoto, extensao);
+	         fotoDao.inserirFoto(foto);
+	
+	         System.out.println("Foto salva para evento ID: " + idEvento);
+	     }
+
         response.sendRedirect("index.jsp");
-        
-        
-
-	 
-        
     }
-
 
 
 

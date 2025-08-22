@@ -118,12 +118,10 @@ public class EventoServlet extends HttpServlet {
 		dispatcher.forward(request, response);
 	}
 
-
-
 	private void inserirEvento(HttpServletRequest request, HttpServletResponse response) 
 	        throws ServletException, IOException, SQLException {
 
-
+	 
 	    String logradouro = request.getParameter("logradouro");
 	    String numero = request.getParameter("numero");
 	    String complemento = request.getParameter("complemento");
@@ -139,16 +137,24 @@ public class EventoServlet extends HttpServlet {
 	        idEndereco = enderecoDao.inserirEndereco(endereco);
 	    }
 
+	  
+	    Long idAnimal = null;
+	    String idAnimalParam = request.getParameter("idAnimal"); // vem no form da adoção
+	    if (idAnimalParam != null && !idAnimalParam.isBlank()) {
+	        
+	        idAnimal = Long.parseLong(idAnimalParam);
+	    } else {
+	       
+	        String especie = request.getParameter("especie");
+	        String raca = request.getParameter("raca");
+	        String cor = request.getParameter("cor");
+	        String porte = request.getParameter("porte");
 
-	    String especie = request.getParameter("especie");
-	    String raca = request.getParameter("raca");
-	    String cor = request.getParameter("cor");
-	    String porte = request.getParameter("porte");
+	        Animal animal = new Animal(null, especie, raca, cor, porte);
+	        idAnimal = animalDao.inserirAnimal(animal);
+	    }
 
-	    Animal animal = new Animal(null, especie, raca, cor, porte);
-	    Long idAnimal = animalDao.inserirAnimal(animal);
-
-	 
+	
 	    Usuario usuarioLogado = (Usuario) request.getSession().getAttribute("usuarioLogado");
 	    if (usuarioLogado == null) {
 	        response.sendRedirect("login.jsp");
@@ -156,7 +162,7 @@ public class EventoServlet extends HttpServlet {
 	    }
 	    Long idUsuario = usuarioLogado.getId();
 
-	    // ===== Evento =====
+	    
 	    LocalDate dataEvento = LocalDate.parse(request.getParameter("dataEvento"));
 	    String comentario = request.getParameter("comentario");
 	    String tipoEvento = request.getParameter("tipoEvento");
@@ -164,7 +170,7 @@ public class EventoServlet extends HttpServlet {
 	    Evento evento = new Evento(null, idUsuario, idEndereco, idAnimal, dataEvento, comentario, tipoEvento);
 	    Long idEvento = eventoDao.inserirEvento(evento);
 
-	    // ===== Foto =====
+	    
 	    Part parteFoto = request.getPart("foto");
 	    if (parteFoto != null && parteFoto.getSize() > 0) {
 	        try (InputStream is = parteFoto.getInputStream()) {
@@ -176,14 +182,16 @@ public class EventoServlet extends HttpServlet {
 	                extensao = nomeArquivo.substring(nomeArquivo.lastIndexOf('.') + 1).toLowerCase();
 	            }
 
-	            Foto foto = new Foto(null, idEvento, idAnimal, dadosFoto, extensao);
+	            
+	            Foto foto = new Foto(null, idUsuario, idEvento, dadosFoto, extensao);
 	            fotoDao.inserirFoto(foto);
 	        }
 	    }
 
-	   
+
 	    response.sendRedirect("index.jsp");
 	}
+
 
 
 	private void mostrarDetalhesAnimal(HttpServletRequest request, HttpServletResponse response)

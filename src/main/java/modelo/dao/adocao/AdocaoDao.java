@@ -5,5 +5,5 @@ import modelo.entidade.adocao.Adocao;
 import java.sql.SQLException;
 
 public interface AdocaoDao extends EventoDao {
-    void inserirAdocao(Adocao adocao) throws SQLException;
+    Long inserirAdocao(Adocao adocao) throws SQLException;
 }

@@ -1,56 +1,65 @@
 package modelo.dao.usuario;
 
 import modelo.entidade.usuario.Usuario;
+import modelo.entidade.foto.Foto;
+import modelo.dao.foto.FotoDao;
+import modelo.dao.foto.FotoDaoImpl;
+
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
+import javax.servlet.http.Part;
+import java.io.InputStream;
+import java.sql.Statement;
+
+
 
 public class UsuarioDaoImpl implements UsuarioDao{
 	
-	public void inserirUsuario(Usuario usuario) {
-		
-		Connection conexao = null;
-		PreparedStatement insert = null;
-		
+	public Long inserirUsuario(Usuario usuario) {
+	    Connection conexao = null;
+	    PreparedStatement insert = null;
+	    ResultSet rs = null;
+	    Long idGerado = null;
 
-		
-		
-		try { 
-			
-		    
-			
-			conexao = conectarBanco();
-			insert = conexao.prepareStatement("INSERT INTO usuario (nome_usuario, sobrenome_usuario, email_usuario, senha_usuario, id_endereco) VALUES (?,?,?,?,?)\r\n");
-		
-			insert.setString(1, usuario.getNome());
-			insert.setString(2, usuario.getSobrenome());
-			insert.setString(3, usuario.getEmail());
-			insert.setString(4, usuario.getSenha());
-			insert.setLong(5, usuario.getIdEndereco());
-			System.out.println("Usuário salvo!");
-			insert.execute();
-		} catch (SQLException erro) {
-			erro.printStackTrace();
-		}
-		finally {
+	    try {
+	        conexao = conectarBanco();
+	        insert = conexao.prepareStatement(
+	            "INSERT INTO usuario (nome_usuario, sobrenome_usuario, email_usuario, senha_usuario, id_endereco) VALUES (?,?,?,?,?)",
+	            Statement.RETURN_GENERATED_KEYS
+	        );
 
-			try {
+	        insert.setString(1, usuario.getNome());
+	        insert.setString(2, usuario.getSobrenome());
+	        insert.setString(3, usuario.getEmail());
+	        insert.setString(4, usuario.getSenha());
+	        insert.setLong(5, usuario.getIdEndereco());
 
-				if (insert != null)
-					insert.close();
+	        insert.executeUpdate();
 
-				if (conexao != null)
-					conexao.close();
+	        rs = insert.getGeneratedKeys();
+	        if (rs.next()) {
+	            idGerado = rs.getLong(1);
+	        }
 
-			} catch (SQLException erro) {
-
-				erro.printStackTrace();
-			}
-		}
+	        System.out.println("Usuário salvo! ID: " + idGerado);
+	    } catch (SQLException erro) {
+	        erro.printStackTrace();
+	    } finally {
+	        try {
+	            if (rs != null) rs.close();
+	            if (insert != null) insert.close();
+	            if (conexao != null) conexao.close();
+	        } catch (SQLException erro) {
+	            erro.printStackTrace();
+	        }
+	    }
+	    return idGerado;
 	}
-	
+
 public void deletarUsuario(Usuario usuario) {
 		
 		Connection conexao = null;

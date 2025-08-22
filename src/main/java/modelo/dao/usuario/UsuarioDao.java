@@ -4,7 +4,7 @@ import modelo.entidade.usuario.Usuario;
 
 public interface UsuarioDao {
 	
-	void inserirUsuario(Usuario usuario);
+	Long inserirUsuario(Usuario usuario);
 
 	void deletarUsuario(Usuario usuario);
 
