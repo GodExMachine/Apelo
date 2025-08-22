@@ -41,6 +41,16 @@
 								<button type="submit" class="botao">Pesquisar</button>
 							</form>
 						</div>
+						
+							<!-- cor-->
+						<div id="filtroCor" class="filtro" style="display: none;">
+							<form action="buscar-por-cor" method="get">
+								<input type="text" name="cidade"
+									placeholder="Digite a cor..." required />
+								<button type="submit" class="botao">Pesquisar</button>
+							</form>
+						</div>
+						
 
 						<!-- cidade -->
 						<div id="filtroCidade" class="filtro" style="display: none;">

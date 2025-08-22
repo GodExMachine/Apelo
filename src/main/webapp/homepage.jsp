@@ -34,6 +34,7 @@
 	<c:if test="${not empty eventos}">
 		<table>
 			<tr>
+				<th>Foto</th>
 				<th>ID Animal</th>
 				<th>Espécie</th>
 				<th>Tipo de Evento</th>
@@ -48,8 +49,17 @@
 				<c:set var="evento" value="${item[0]}" />
 				<c:set var="animal" value="${item[1]}" />
 				<c:set var="endereco" value="${item[2]}" />
+				<c:set var="fotoBase64" value="${item[3]}" />
+				<c:set var="extensao" value="${item[4]}" />
 
-				<tr>
+				<tr>	
+					
+					<td>
+					  <c:if test="${not empty fotoBase64}">
+					    <img src="data:image/${extensao};base64,${fotoBase64}" width="120"/>
+					  </c:if>
+					</td>
+			
 					<td>${evento.idAnimal}</td>
 					<td>${animal.especie}</td>
 
@@ -58,9 +68,12 @@
 					<td>${endereco.logradouro}</td>
 					<td>${endereco.cidade}</td>
 					<td>${evento.comentario}</td>
+					
+					
 					<td><a class="botao" href="detalhes-animal?idAnimal=${evento.idAnimal}"> Selecionar</a></td>
 				</tr>
 			</c:forEach>
+            
 
 		</table>
 	</c:if>

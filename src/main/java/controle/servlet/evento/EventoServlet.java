@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.ArrayList;
 import javax.servlet.annotation.MultipartConfig;
 import java.io.InputStream;
+import java.util.Base64;
 
 
 @MultipartConfig
@@ -210,16 +211,40 @@ public class EventoServlet extends HttpServlet {
 		dispatcher.forward(request, response);
 	}
 
+	
+
+
 	private void mostrarHomepage(HttpServletRequest request, HttpServletResponse response) 
 	        throws ServletException, IOException, SQLException {
 
 	    List<Object[]> eventos = eventoDao.listarUltimoEventoPorAnimal();
+	    List<Object[]> eventosComFotoBase64 = new ArrayList<>();
 
-	    request.setAttribute("eventos", eventos);
+	    for (Object[] item : eventos) {
+	        Evento evento = (Evento) item[0];
+	        Animal animal = (Animal) item[1];
+	        Endereco endereco = (Endereco) item[2];
+	        byte[] dadosFoto = (byte[]) item[3];
+	        String extensao = (String) item[4];
+
+	        String fotoBase64 = null;
+	        if (dadosFoto != null) {
+	            fotoBase64 = Base64.getEncoder().encodeToString(dadosFoto);
+	        }
+
+	       
+	        eventosComFotoBase64.add(new Object[]{evento, animal, endereco, fotoBase64, extensao});
+	    }
+
+	    request.setAttribute("eventos", eventosComFotoBase64);
+	    
+	    
 
 	    RequestDispatcher dispatcher = request.getRequestDispatcher("homepage.jsp");
 	    dispatcher.forward(request, response);
 	}
+	
+
 
 	private void mostrarTelaErro404(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {

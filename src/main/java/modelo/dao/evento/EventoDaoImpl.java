@@ -155,7 +155,7 @@ public class EventoDaoImpl implements EventoDao {
 	public List<Object[]> listarUltimoEventoPorAnimal() throws SQLException {
 	    List<Object[]> lista = new ArrayList<>();
 
-	    String sql = "SELECT e.*, a.*, en.* " +
+	    String sql = "SELECT e.*, a.*, en.*, f.id_foto, f.byte_foto, f.extensao_foto " +
 	                 "FROM evento e " +
 	                 "INNER JOIN ( " +
 	                 "    SELECT id_animal, MAX(data_evento) AS ultima_data " +
@@ -164,6 +164,7 @@ public class EventoDaoImpl implements EventoDao {
 	                 ") ult ON e.id_animal = ult.id_animal AND e.data_evento = ult.ultima_data " +
 	                 "JOIN animal a ON e.id_animal = a.id_animal " +
 	                 "JOIN endereco en ON e.id_endereco = en.id_endereco " +
+	                 "LEFT JOIN foto f ON f.id_evento = e.id_evento " +
 	                 "ORDER BY e.data_evento DESC";
 
 	    try (Connection con = conectarBanco();
@@ -200,11 +201,16 @@ public class EventoDaoImpl implements EventoDao {
 	                rs.getString("cep_endereco")
 	            );
 
-	            lista.add(new Object[]{evento, animal, endereco});
+	 
+	            byte[] dadosFoto = rs.getBytes("byte_foto");
+	            String extensao = rs.getString("extensao_foto");
+
+	            lista.add(new Object[]{evento, animal, endereco, dadosFoto, extensao});
 	        }
 	    }
 	    return lista;
 	}
+
 
 
 	public List<Evento> listarPorAnimal(Long idAnimal) throws SQLException {

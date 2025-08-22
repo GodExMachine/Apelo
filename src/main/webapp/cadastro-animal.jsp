@@ -58,11 +58,6 @@
 		  <option value="">Selecione...</option>
 		  <option value="Cachorro">Cachorro</option>
 		  <option value="Gato">Gato</option>
-		  <option value="Calopsita">Calopsita</option>
-		  <option value="Coelho">Coelho</option>
-		  <option value="Hamster">Hamster</option>
-		  <option value="Papagaio">Papagaio</option>
-		  <option value="Tartaruga">Tartaruga</option>
 		</select>
 
         <label for="raca">Raça <span aria-hidden="true" class="required">*</span></label>
