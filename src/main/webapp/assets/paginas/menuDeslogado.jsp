@@ -61,10 +61,10 @@
     <nav>
       <div class="navBar">
         <div></div>
-
+		
         <div class="logo-section">
-          <img src="assets/imgs/logo.png" alt="Logo">
-          <a>APELO</a>
+          <img  src="assets/imgs/logo.png" alt="Logo">
+          <a href="index.jsp"  >APELO</a>
         </div>
 
         <div>

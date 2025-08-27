@@ -8,7 +8,14 @@
      <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/estilo.css?v=1" />
 </head>
 <body>
+
+		<c:if test="${empty sessionScope.usuarioLogado}">
+			<%@ include file="/assets/paginas/menuDeslogado.jsp"%>
+		</c:if>
+
+
   <main class="page">
+  
     <div class="form-container" role="main" aria-labelledby="loginTitle">
       <form action="login" method="post" novalidate>
         <h1 id="loginTitle">Login</h1>
@@ -24,11 +31,59 @@
         <input type="password" id="senha" name="senha" autocomplete="current-password" required />
 
         <div class="form-actions">
-          <button type="submit" class="btn-primary">Entrar</button>
-          <a href="index.jsp" class="btn-secondary">Voltar</a>
+          <button type="submit" class="botao">Entrar</button>
+          
         </div>
       </form>
     </div>
   </main>
+  
+  
+  
 </body>
+
+
+
+<style>
+
+.page {
+  display: flex;
+  justify-content: center;
+  align-items: center;     
+  height: 100vh;       
+  background-color: #f0f0f0; 
+}
+
+
+.form-container {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+label {
+  display: block;
+  margin-top: 1rem;
+  font-weight: bold;
+}
+
+input {
+  width: 100%;
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.botao{
+  width: 100px;
+  margin-top: 10px;
+}
+
+</style>
+
 </html>

@@ -8,6 +8,16 @@
 </head>
 <body>
 
+		<c:if test="${empty sessionScope.usuarioLogado}">
+			<%@ include file="/assets/paginas/menuDeslogado.jsp"%>
+		</c:if>
+
+		<c:if test="${not empty sessionScope.usuarioLogado}">
+			<%@ include file="/assets/paginas/menuLogado.jsp"%>
+		</c:if>
+
+
+
 <h2>Detalhes do Animal</h2>
 <div class="info-box">
     <p><strong>ID:</strong> ${animal.id}</p>

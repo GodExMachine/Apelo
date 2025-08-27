@@ -9,11 +9,24 @@
      <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/estilo.css?v=1" />
 </head>
 <body>
+
+
+
+
+		<c:if test="${empty sessionScope.usuarioLogado}">
+			<%@ include file="/assets/paginas/menuDeslogado.jsp"%>
+		</c:if>
+
+		<c:if test="${not empty sessionScope.usuarioLogado}">
+			<%@ include file="/assets/paginas/menuLogado.jsp"%>
+		</c:if>
+		
+		
   <main class="page">
     <div class="card">
-      <header class="card-header">     
+         
           <h1>Perfil do Usuário</h1>
-      </header>
+      
 
       <section class="section">
         <h2>Dados Pessoais</h2>

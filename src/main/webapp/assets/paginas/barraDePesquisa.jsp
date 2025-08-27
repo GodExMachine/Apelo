@@ -1,4 +1,4 @@
-<div style="margin:10px;">
+<div style="margin-bottom:25px;">
 			<div style="text-align: center; margin: 20px 0;">
 						<p style=""><strong>Pesquisar por:</strong>	</p>
 
@@ -81,3 +81,28 @@
 	    document.getElementById(filtroId).style.display = 'block';
 	}
 </script>
+
+<style>
+
+select {
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+  margin-bottom: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  background-color: #fff;
+  
+}
+
+input {
+	padding: 0.5rem;
+	margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	font-size: 1rem;
+}
+
+
+</style>
