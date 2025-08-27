@@ -8,6 +8,19 @@
        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/estilo.css?v=1" />
 </head>
 <body>
+
+
+
+		<c:if test="${empty sessionScope.usuarioLogado}">
+			<%@ include file="/assets/paginas/menuDeslogado.jsp"%>
+		</c:if>
+
+		<c:if test="${not empty sessionScope.usuarioLogado}">
+			<%@ include file="/assets/paginas/menuLogado.jsp"%>
+		</c:if>
+
+
+
   <h2>Todos os Eventos</h2>
 
   <c:if test="${empty eventos}">
