@@ -244,9 +244,10 @@ public class EventoDaoImpl implements EventoDao {
 
 	public List<Object[]> listarPorAnimalComUsuario(Long idAnimal) throws SQLException {
 	    List<Object[]> lista = new ArrayList<>();
-	    String sql = "SELECT e.*, u.nome_usuario, u.sobrenome_usuario " +
+	    String sql = "SELECT e.*, u.nome_usuario, u.sobrenome_usuario, f.byte_foto, f.extensao_foto " +
 	                 "FROM evento e " +
 	                 "JOIN usuario u ON e.id_usuario = u.id_usuario " +
+	                 "LEFT JOIN foto f ON f.id_evento = e.id_evento " +
 	                 "WHERE e.id_animal = ? " +
 	                 "ORDER BY e.data_evento DESC";
 
@@ -267,14 +268,18 @@ public class EventoDaoImpl implements EventoDao {
 	                        rs.getString("tipo_evento")
 	                );
 
-	               
 	                String nomeCompleto = rs.getString("nome_usuario") + " " + rs.getString("sobrenome_usuario");
-	                lista.add(new Object[]{evento, nomeCompleto});
+	                byte[] dadosFoto = rs.getBytes("byte_foto");
+	                String extensao = rs.getString("extensao_foto");
+
+	       
+	                lista.add(new Object[]{evento, nomeCompleto, dadosFoto, extensao});
 	            }
 	        }
 	    }
 	    return lista;
 	}
+
 
 	public List<Object[]> listarUltimoEventoPorAnimalPorEspecie(String especie) throws SQLException {
 	    List<Object[]> lista = new ArrayList<>();
@@ -470,6 +475,62 @@ public class EventoDaoImpl implements EventoDao {
 	    return eventos;
 	}
 
-	
+	public List<Object[]> listarPorUsuarioComDetalhes(Long idUsuario) throws SQLException {
+	    List<Object[]> lista = new ArrayList<>();
+
+	    String sql = "SELECT e.*, a.*, en.*, f.byte_foto, f.extensao_foto " +
+	                 "FROM evento e " +
+	                 "JOIN animal a ON e.id_animal = a.id_animal " +
+	                 "JOIN endereco en ON e.id_endereco = en.id_endereco " +
+	                 "LEFT JOIN foto f ON f.id_evento = e.id_evento " +
+	                 "WHERE e.id_usuario = ? " +
+	                 "ORDER BY e.data_evento DESC";
+
+	    try (Connection con = conectarBanco();
+	         PreparedStatement stmt = con.prepareStatement(sql)) {
+
+	        stmt.setLong(1, idUsuario);
+
+	        try (ResultSet rs = stmt.executeQuery()) {
+	            while (rs.next()) {
+	                Evento evento = new Evento(
+	                    rs.getLong("id_evento"),
+	                    rs.getLong("id_usuario"),
+	                    rs.getLong("id_endereco"),
+	                    rs.getLong("id_animal"),
+	                    rs.getDate("data_evento").toLocalDate(),
+	                    rs.getString("comentario"),
+	                    rs.getString("tipo_evento")
+	                );
+
+	                Animal animal = new Animal(
+	                    rs.getLong("id_animal"),
+	                    rs.getString("especie_animal"),
+	                    rs.getString("raca_animal"),
+	                    rs.getString("cor_animal"),
+	                    rs.getString("porte_animal")
+	                );
+
+	                Endereco endereco = new Endereco(
+	                    rs.getLong("id_endereco"),
+	                    rs.getString("logradouro_endereco"),
+	                    rs.getString("numero_endereco"),
+	                    rs.getString("complemento_endereco"),
+	                    rs.getString("bairro_endereco"),
+	                    rs.getString("cidade_endereco"),
+	                    rs.getString("estado_endereco"),
+	                    rs.getString("cep_endereco")
+	                );
+
+	                byte[] dadosFoto = rs.getBytes("byte_foto");
+	                String extensao = rs.getString("extensao_foto");
+
+	                lista.add(new Object[]{evento, animal, endereco, dadosFoto, extensao});
+	            }
+	        }
+	    }
+	    return lista;
+	}
+
 	
 }

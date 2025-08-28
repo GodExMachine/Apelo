@@ -72,16 +72,45 @@ a.botao:hover, button.botao:hover {
 	height: 30px;
 }
 
+.img-quadrada {
+  width: 150px;       
+  height: 150px;     
+  object-fit: cover;  
+  border-radius: 8px;
+  border: 2px solid #ccc;
+}
 
-select {
+.modal {
+  display: none; 
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
   width: 100%;
-  padding: 0.75rem;
-  margin-top: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 1rem;
-  background-color: #fff;
-  appearance: none;
+  height: 100%;
+  background-color: rgba(0,0,0,0.8);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal img {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  border: 3px solid #fff;
+  background: #fff;
+  object-fit: contain;
+}
+
+.modal-close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  font-size: 32px;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
 }
 
 

@@ -17,5 +17,6 @@ public interface EventoDao {
     List<Object[]> listarUltimoEventoPorAnimalPorTipoEvento(String tipoEvento) throws SQLException;
     List<Object[]> listarUltimoEventoPorAnimalPorCidade(String cidade) throws SQLException;
     List<Evento> listarUltimoEventoPorAnimalPorData(LocalDate data) throws SQLException;
+    List<Object[]> listarPorUsuarioComDetalhes(Long idUsuario) throws SQLException;
 
 }

@@ -85,14 +85,12 @@
 <style>
 
 select {
-  padding: 0.5rem;
-  margin-top: 0.5rem;
-  margin-bottom: 5px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 1rem;
-  background-color: #fff;
-  
+	padding: 0.5rem;
+	margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	font-size: 1rem;
 }
 
 input {

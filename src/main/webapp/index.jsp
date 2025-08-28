@@ -10,8 +10,20 @@
 
 </head>
 <body>
+
+	<c:if test="${empty sessionScope.usuarioLogado}">
+		<%@ include file="/assets/paginas/menuDeslogado.jsp"%>
+	</c:if>
+
+	<c:if test="${not empty sessionScope.usuarioLogado}">
+		<%@ include file="/assets/paginas/menuLogado.jsp"%>
+	</c:if>
+
+
+
+
 	<div class="container">
-		<h2>APELO</h2>
+
 
 
 		<form action="${pageContext.request.contextPath}/homepage"

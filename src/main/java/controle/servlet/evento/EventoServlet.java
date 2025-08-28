@@ -196,20 +196,38 @@ public class EventoServlet extends HttpServlet {
 
 
 	private void mostrarDetalhesAnimal(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException, SQLException {
+	        throws ServletException, IOException, SQLException {
 
-		Long idAnimal = Long.parseLong(request.getParameter("idAnimal"));
+	    Long idAnimal = Long.parseLong(request.getParameter("idAnimal"));
 
-		Animal animal = animalDao.buscarAnimalPorId(idAnimal);
+	    Animal animal = animalDao.buscarAnimalPorId(idAnimal);
 
-		List<Object[]> eventosComUsuario = eventoDao.listarPorAnimalComUsuario(idAnimal);
 
-		request.setAttribute("animal", animal);
-		request.setAttribute("eventosComUsuario", eventosComUsuario);
+	    List<Object[]> eventosBruto = eventoDao.listarPorAnimalComUsuario(idAnimal);
+	    List<Object[]> eventosComFotoBase64 = new ArrayList<>();
 
-		RequestDispatcher dispatcher = request.getRequestDispatcher("detalhes-animal.jsp");
-		dispatcher.forward(request, response);
+	    for (Object[] item : eventosBruto) {
+	        Evento evento = (Evento) item[0];
+	        String nomeCompleto = (String) item[1];
+	        byte[] dadosFoto = (byte[]) item[2];
+	        String extensao = (String) item[3];
+
+	        String fotoBase64 = null;
+	        if (dadosFoto != null) {
+	            fotoBase64 = Base64.getEncoder().encodeToString(dadosFoto);
+	        }
+
+
+	        eventosComFotoBase64.add(new Object[]{evento, nomeCompleto, fotoBase64, extensao});
+	    }
+
+	    request.setAttribute("animal", animal);
+	    request.setAttribute("eventosComUsuario", eventosComFotoBase64);
+
+	    RequestDispatcher dispatcher = request.getRequestDispatcher("detalhes-animal.jsp");
+	    dispatcher.forward(request, response);
 	}
+
 
 	
 

@@ -18,6 +18,6 @@ public interface UsuarioDao {
 	
 	Usuario buscarPorEmailESenha(String email, String senha);
 	
-	Usuario buscarUsuarioPorId(Long id);
+	Object[] buscarUsuarioPorId(Long id);
 
 }

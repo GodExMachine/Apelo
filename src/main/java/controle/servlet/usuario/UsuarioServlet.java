@@ -36,6 +36,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.InputStream;
+import java.util.Base64;
+
 
 @MultipartConfig
 //@WebServlet(urlPatterns = {"/cadastro-usuario","/inserir-usuario","/login-usuario","/login","/homepage","/perfil-usuario"})
@@ -206,27 +208,61 @@ public class UsuarioServlet extends HttpServlet {
 		response.sendRedirect(request.getContextPath() + "/index.jsp");
 	}
 
+	
 	private void mostrarPerfilUsuario(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException, SQLException {
+	        throws ServletException, IOException, SQLException {
 
-		HttpSession session = request.getSession();
-		Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
+	    HttpSession session = request.getSession();
+	    Usuario usuarioSessao = (Usuario) session.getAttribute("usuarioLogado");
 
-		if (usuario == null) {
-			response.sendRedirect("login-usuario");
-			return;
-		}
+	    if (usuarioSessao == null) {
+	        response.sendRedirect("login-usuario");
+	        return;
+	    }
 
-		Long idEndereco = usuario.getIdEndereco();
 
-		Endereco endereco = enderecoDao.buscarEnderecoPorId(idEndereco);
+	    Object[] dados = usuarioDao.buscarUsuarioPorId(usuarioSessao.getId());
+	    Usuario usuario = (Usuario) dados[0];
+	    Endereco endereco = (Endereco) dados[1];
+	    byte[] fotoBytes = (byte[]) dados[2];
+	    String extensao = (String) dados[3];
 
-		request.setAttribute("usuario", usuario);
-		request.setAttribute("endereco", endereco);
+	    String fotoBase64 = null;
+	    if (fotoBytes != null) {
+	        fotoBase64 = Base64.getEncoder().encodeToString(fotoBytes);
+	    }
 
-		RequestDispatcher dispatcher = request.getRequestDispatcher("perfil-usuario.jsp");
-		dispatcher.forward(request, response);
+	 
+	    List<Object[]> eventosBruto = eventoDao.listarPorUsuarioComDetalhes(usuario.getId());
+	    List<Object[]> eventosComFotoBase64 = new ArrayList<>();
+
+	    for (Object[] item : eventosBruto) {
+	        Evento evento = (Evento) item[0];
+	        Animal animal = (Animal) item[1];
+	        Endereco end = (Endereco) item[2];
+	        byte[] dadosFotoEvento = (byte[]) item[3];
+	        String extensaoEvento = (String) item[4];
+
+	        String fotoBase64Evento = null;
+	        if (dadosFotoEvento != null) {
+	            fotoBase64Evento = Base64.getEncoder().encodeToString(dadosFotoEvento);
+	        }
+
+	        eventosComFotoBase64.add(new Object[]{evento, animal, end, fotoBase64Evento, extensaoEvento});
+	    }
+
+	  
+	    request.setAttribute("usuario", usuario);
+	    request.setAttribute("endereco", endereco);
+	    request.setAttribute("fotoBase64", fotoBase64);
+	    request.setAttribute("extensao", extensao);
+	    request.setAttribute("eventosUsuario", eventosComFotoBase64);
+
+	    RequestDispatcher dispatcher = request.getRequestDispatcher("perfil-usuario.jsp");
+	    dispatcher.forward(request, response);
 	}
+
+
 
 	private void mostrarTelaErro404(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {

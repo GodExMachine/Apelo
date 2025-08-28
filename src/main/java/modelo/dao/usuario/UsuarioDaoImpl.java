@@ -4,7 +4,7 @@ import modelo.entidade.usuario.Usuario;
 import modelo.entidade.foto.Foto;
 import modelo.dao.foto.FotoDao;
 import modelo.dao.foto.FotoDaoImpl;
-
+import modelo.entidade.endereco.Endereco;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -14,12 +14,13 @@ import java.sql.ResultSet;
 import javax.servlet.http.Part;
 import java.io.InputStream;
 import java.sql.Statement;
+import java.util.Base64; 
 
 
 
 public class UsuarioDaoImpl implements UsuarioDao{
 	
-	public Long inserirUsuario(Usuario usuario) {
+public Long inserirUsuario(Usuario usuario) {
 	    Connection conexao = null;
 	    PreparedStatement insert = null;
 	    ResultSet rs = null;
@@ -277,20 +278,28 @@ public Usuario buscarPorEmailESenha(String email, String senha) {
     return usuario;
 }
 
-public Usuario buscarUsuarioPorId(Long id) {
+
+
+public Object[] buscarUsuarioPorId(Long id) {
     Connection conexao = null;
     PreparedStatement stmt = null;
     ResultSet rs = null;
-    Usuario usuario = null;
+    Object[] resultado = null;
+
+    String sql = "SELECT u.*, e.*, f.byte_foto, f.extensao_foto " +
+                 "FROM usuario u " +
+                 "JOIN endereco e ON u.id_endereco = e.id_endereco " +
+                 "LEFT JOIN foto f ON f.id_usuario = u.id_usuario " +
+                 "WHERE u.id_usuario = ?";
 
     try {
         conexao = conectarBanco();
-        stmt = conexao.prepareStatement("SELECT * FROM usuario WHERE id_usuario = ?");
+        stmt = conexao.prepareStatement(sql);
         stmt.setLong(1, id);
         rs = stmt.executeQuery();
 
         if (rs.next()) {
-            usuario = new Usuario(
+            Usuario usuario = new Usuario(
                 rs.getString("nome_usuario"),
                 rs.getString("sobrenome_usuario"),
                 rs.getString("email_usuario"),
@@ -298,15 +307,40 @@ public Usuario buscarUsuarioPorId(Long id) {
                 rs.getLong("id_endereco")
             );
             usuario.setId(rs.getLong("id_usuario"));
+
+            Endereco endereco = new Endereco(
+                rs.getLong("id_endereco"),
+                rs.getString("logradouro_endereco"),
+                rs.getString("numero_endereco"),
+                rs.getString("complemento_endereco"),
+                rs.getString("bairro_endereco"),
+                rs.getString("cidade_endereco"),
+                rs.getString("estado_endereco"),
+                rs.getString("cep_endereco")
+            );
+
+            byte[] dadosFoto = rs.getBytes("byte_foto");
+            String extensao = rs.getString("extensao_foto");
+
+            
+            resultado = new Object[]{usuario, endereco, dadosFoto, extensao};
         }
     } catch (SQLException e) {
         e.printStackTrace();
     } finally {
-        try { if (rs != null) rs.close(); if (stmt != null) stmt.close(); if (conexao != null) conexao.close(); } catch (SQLException e) { e.printStackTrace(); }
+        try {
+            if (rs != null) rs.close();
+            if (stmt != null) stmt.close();
+            if (conexao != null) conexao.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
-    return usuario;
+    return resultado;
 }
+
+
 
 
 
