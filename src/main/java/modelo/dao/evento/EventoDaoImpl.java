@@ -284,7 +284,7 @@ public class EventoDaoImpl implements EventoDao {
 	public List<Object[]> listarUltimoEventoPorAnimalPorEspecie(String especie) throws SQLException {
 	    List<Object[]> lista = new ArrayList<>();
 
-	    String sql = "SELECT e.*, a.*, en.* " +
+	    String sql = "SELECT e.*, a.*, en.*, f.byte_foto, f.extensao_foto " +
 	                 "FROM evento e " +
 	                 "INNER JOIN animal a ON e.id_animal = a.id_animal " +
 	                 "INNER JOIN endereco en ON e.id_endereco = en.id_endereco " +
@@ -293,6 +293,7 @@ public class EventoDaoImpl implements EventoDao {
 	                 "    FROM evento " +
 	                 "    GROUP BY id_animal " +
 	                 ") ult ON e.id_animal = ult.id_animal AND e.data_evento = ult.ultima_data " +
+	                 "LEFT JOIN foto f ON f.id_evento = e.id_evento " +
 	                 "WHERE a.especie_animal = ? " +
 	                 "ORDER BY e.data_evento DESC";
 
@@ -314,12 +315,12 @@ public class EventoDaoImpl implements EventoDao {
 	                );
 
 	                Animal animal = new Animal(
-	                	    rs.getLong("id_animal"),
-	                	    rs.getString("especie_animal"),
-	                	    rs.getString("raca_animal"),
-	                	    rs.getString("cor_animal"),
-	                	    rs.getString("porte_animal")
-	                	);
+	                    rs.getLong("id_animal"),
+	                    rs.getString("especie_animal"),
+	                    rs.getString("raca_animal"),
+	                    rs.getString("cor_animal"),
+	                    rs.getString("porte_animal")
+	                );
 
 	                Endereco endereco = new Endereco(
 	                    rs.getLong("id_endereco"),
@@ -332,19 +333,24 @@ public class EventoDaoImpl implements EventoDao {
 	                    rs.getString("cep_endereco")
 	                );
 
-	                lista.add(new Object[]{evento, animal, endereco});
+	                byte[] dadosFoto = rs.getBytes("byte_foto");
+	                String extensao = rs.getString("extensao_foto");
+
+	                lista.add(new Object[]{evento, animal, endereco, dadosFoto, extensao});
 	            }
 	        }
 	    }
 	    return lista;
 	}
 
+
 	public List<Object[]> listarUltimoEventoPorAnimalPorTipoEvento(String tipoEvento) throws SQLException {
 	    List<Object[]> lista = new ArrayList<>();
-	    String sql = "SELECT e.*, a.*, en.* " +
+	    String sql = "SELECT e.*, a.*, en.*, f.byte_foto, f.extensao_foto " +
 	                 "FROM evento e " +
 	                 "JOIN animal a ON e.id_animal = a.id_animal " +
 	                 "JOIN endereco en ON e.id_endereco = en.id_endereco " +
+	                 "LEFT JOIN foto f ON f.id_evento = e.id_evento " +  // <-- pega a foto
 	                 "WHERE e.tipo_evento = ? " +
 	                 "ORDER BY e.data_evento DESC";
 
@@ -364,12 +370,12 @@ public class EventoDaoImpl implements EventoDao {
 	                );
 
 	                Animal animal = new Animal(
-	                	    rs.getLong("id_animal"),
-	                	    rs.getString("especie_animal"),
-	                	    rs.getString("raca_animal"),
-	                	    rs.getString("cor_animal"),
-	                	    rs.getString("porte_animal")
-	                	);
+	                    rs.getLong("id_animal"),
+	                    rs.getString("especie_animal"),
+	                    rs.getString("raca_animal"),
+	                    rs.getString("cor_animal"),
+	                    rs.getString("porte_animal")
+	                );
 
 	                Endereco endereco = new Endereco(
 	                    rs.getLong("id_endereco"),
@@ -382,19 +388,24 @@ public class EventoDaoImpl implements EventoDao {
 	                    rs.getString("cep_endereco")
 	                );
 
-	                lista.add(new Object[]{evento, animal, endereco});
+	                byte[] dadosFoto = rs.getBytes("byte_foto");
+	                String extensao = rs.getString("extensao_foto");
+
+	                lista.add(new Object[]{evento, animal, endereco, dadosFoto, extensao});
 	            }
 	        }
 	    }
 	    return lista;
 	}
+
 	
 	public List<Object[]> listarUltimoEventoPorAnimalPorCidade(String cidade) throws SQLException {
 	    List<Object[]> lista = new ArrayList<>();
-	    String sql = "SELECT e.*, a.*, en.* " +
+	    String sql = "SELECT e.*, a.*, en.*, f.byte_foto, f.extensao_foto " +
 	                 "FROM evento e " +
 	                 "JOIN animal a ON e.id_animal = a.id_animal " +
 	                 "JOIN endereco en ON e.id_endereco = en.id_endereco " +
+	                 "LEFT JOIN foto f ON f.id_evento = e.id_evento " + // <-- pega a foto
 	                 "WHERE en.cidade_endereco LIKE ? " +
 	                 "ORDER BY e.data_evento DESC";
 
@@ -414,12 +425,12 @@ public class EventoDaoImpl implements EventoDao {
 	                );
 
 	                Animal animal = new Animal(
-	                	    rs.getLong("id_animal"),
-	                	    rs.getString("especie_animal"),
-	                	    rs.getString("raca_animal"),
-	                	    rs.getString("cor_animal"),
-	                	    rs.getString("porte_animal")
-	                	);
+	                    rs.getLong("id_animal"),
+	                    rs.getString("especie_animal"),
+	                    rs.getString("raca_animal"),
+	                    rs.getString("cor_animal"),
+	                    rs.getString("porte_animal")
+	                );
 
 	                Endereco endereco = new Endereco(
 	                    rs.getLong("id_endereco"),
@@ -432,12 +443,16 @@ public class EventoDaoImpl implements EventoDao {
 	                    rs.getString("cep_endereco")
 	                );
 
-	                lista.add(new Object[]{evento, animal, endereco});
+	                byte[] dadosFoto = rs.getBytes("byte_foto");
+	                String extensao = rs.getString("extensao_foto");
+
+	                lista.add(new Object[]{evento, animal, endereco, dadosFoto, extensao});
 	            }
 	        }
 	    }
 	    return lista;
 	}
+
 	
 	public List<Evento> listarUltimoEventoPorAnimalPorData(LocalDate data) throws SQLException {
 	    List<Evento> eventos = new ArrayList<>();

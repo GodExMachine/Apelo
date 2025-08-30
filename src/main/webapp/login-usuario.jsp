@@ -4,18 +4,16 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Login do Usuário</title>
-     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/estilo.css?v=1" />
+  <title>Login Usuário</title>
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/estilo.css?v=1" />
 </head>
 <body>
 
-		<c:if test="${empty sessionScope.usuarioLogado}">
-			<%@ include file="/assets/paginas/menuDeslogado.jsp"%>
-		</c:if>
-
+  <c:if test="${empty sessionScope.usuarioLogado}">
+    <%@ include file="/assets/paginas/menuDeslogado.jsp"%>
+  </c:if>
 
   <main class="page">
-  
     <div class="form-container" role="main" aria-labelledby="loginTitle">
       <form action="login" method="post" novalidate>
         <h1 id="loginTitle">Login</h1>
@@ -30,22 +28,21 @@
         <label for="senha">Senha</label>
         <input type="password" id="senha" name="senha" autocomplete="current-password" required />
 
-        <div class="form-actions">
-          <button type="submit" class="botao">Entrar</button>
-          
+      	<div class="form-actions">
+		  <button type="submit" class="botao">Entrar</button>
+		</div>
+
+        <div class="register-link">
+          Não possui conta? 
+          <a href="${pageContext.request.contextPath}/novo-usuario">Cadastre-se</a>
         </div>
       </form>
     </div>
   </main>
-  
-  
-  
+
 </body>
 
-
-
 <style>
-
 .page {
   display: flex;
   justify-content: center;
@@ -53,7 +50,6 @@
   height: 100vh;       
   background-color: #f0f0f0; 
 }
-
 
 .form-container {
   background-color: #fff;
@@ -79,11 +75,31 @@ input {
   font-size: 1rem;
 }
 
-.botao{
-  width: 100px;
-  margin-top: 10px;
+
+.register-link {
+  margin-top: 15px;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #333;
 }
 
-</style>
+.register-link a {
+  color: #640176;
+  font-weight: bold;
+  text-decoration: none;
+}
 
+.register-link a:hover {
+  text-decoration: underline;
+}
+
+.form-actions {
+  text-align: center;
+  margin-top: 15px;
+}
+
+
+
+
+</style>
 </html>

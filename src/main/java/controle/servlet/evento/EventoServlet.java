@@ -33,7 +33,7 @@ import java.util.Base64;
 
 
 @MultipartConfig
-@WebServlet(urlPatterns = { "/cadastro-animal", "/inserir-evento", "/listar-eventos", "/homepage","/detalhes-animal","/buscar-por-especie","/buscar-por-evento","/buscar-por-cidade","/buscar-por-data"})
+@WebServlet(urlPatterns = { "/cadastro-animal","/cadastro-avistamento","/cadastro-resgate", "/inserir-evento", "/listar-eventos", "/homepage","/detalhes-animal","/buscar-por-especie","/buscar-por-evento","/buscar-por-cidade","/buscar-por-data"})
 public class EventoServlet extends HttpServlet {
 
 	private EventoDao eventoDao;
@@ -69,6 +69,14 @@ public class EventoServlet extends HttpServlet {
 				mostrarTelaCadastroAnimal(request, response);
 				break;
 
+			case "/cadastro-avistamento":
+				mostrarTelaCadastroAvistamento(request, response);
+				break;
+				
+			case "/cadastro-resgate":
+				mostrarTelaCadastroResgate(request, response);
+				break;
+				
 			case "/inserir-evento":
 				inserirEvento(request, response);
 				break;
@@ -119,6 +127,28 @@ public class EventoServlet extends HttpServlet {
 		dispatcher.forward(request, response);
 	}
 
+	private void mostrarTelaCadastroAvistamento(HttpServletRequest request, HttpServletResponse response)
+	        throws ServletException, IOException, SQLException {
+	    Long idAnimal = Long.parseLong(request.getParameter("idAnimal"));
+	    Animal animal = animalDao.buscarAnimalPorId(idAnimal);
+	    request.setAttribute("animal", animal);
+
+	    RequestDispatcher dispatcher = request.getRequestDispatcher("cadastro-avistamento.jsp");
+	    dispatcher.forward(request, response);
+	}
+
+	private void mostrarTelaCadastroResgate(HttpServletRequest request, HttpServletResponse response)
+	        throws ServletException, IOException, SQLException {
+	    Long idAnimal = Long.parseLong(request.getParameter("idAnimal"));
+	    Animal animal = animalDao.buscarAnimalPorId(idAnimal);
+	    request.setAttribute("animal", animal);
+
+	    RequestDispatcher dispatcher = request.getRequestDispatcher("cadastro-resgate.jsp");
+	    dispatcher.forward(request, response);
+	}
+
+	
+	
 	private void inserirEvento(HttpServletRequest request, HttpServletResponse response) 
 	        throws ServletException, IOException, SQLException {
 
@@ -140,7 +170,7 @@ public class EventoServlet extends HttpServlet {
 
 	  
 	    Long idAnimal = null;
-	    String idAnimalParam = request.getParameter("idAnimal"); // vem no form da adoção
+	    String idAnimalParam = request.getParameter("idAnimal"); 
 	    if (idAnimalParam != null && !idAnimalParam.isBlank()) {
 	        
 	        idAnimal = Long.parseLong(idAnimalParam);
@@ -294,53 +324,103 @@ public class EventoServlet extends HttpServlet {
 	        throws ServletException, IOException, SQLException {
 
 	    String especie = request.getParameter("especie");
-	    List<Object[]> eventos = new ArrayList<>();
+	    List<Object[]> eventosBruto = new ArrayList<>();
+	    List<Object[]> eventosComFotoBase64 = new ArrayList<>();
 
 	    if (especie != null && !especie.isEmpty()) {
-	        eventos = eventoDao.listarUltimoEventoPorAnimalPorEspecie(especie);
+	        eventosBruto = eventoDao.listarUltimoEventoPorAnimalPorEspecie(especie);
 	    }
 
-	  
-	    request.setAttribute("eventos", eventos);
+	    for (Object[] item : eventosBruto) {
+	        Evento evento = (Evento) item[0];
+	        Animal animal = (Animal) item[1];
+	        Endereco endereco = (Endereco) item[2];
+	        byte[] dadosFoto = (byte[]) item[3];
+	        String extensao = (String) item[4];
+
+	        String fotoBase64 = null;
+	        if (dadosFoto != null) {
+	            fotoBase64 = Base64.getEncoder().encodeToString(dadosFoto);
+	        }
+
+	        eventosComFotoBase64.add(new Object[]{evento, animal, endereco, fotoBase64, extensao});
+	    }
+
+	    request.setAttribute("eventos", eventosComFotoBase64);
 	    request.setAttribute("filtroSelecionado", especie);
 
 	    RequestDispatcher dispatcher = request.getRequestDispatcher("homepage.jsp");
 	    dispatcher.forward(request, response);
 	}
 
+
 	private void buscarPorEvento(HttpServletRequest request, HttpServletResponse response) 
 	        throws ServletException, IOException, SQLException {
 
 	    String tipoEvento = request.getParameter("tipo_evento");
-	    List<Object[]> eventos = new ArrayList<>();
+	    List<Object[]> eventosBruto = new ArrayList<>();
+	    List<Object[]> eventosComFotoBase64 = new ArrayList<>();
 
 	    if (tipoEvento != null && !tipoEvento.isEmpty()) {
-	        eventos = eventoDao.listarUltimoEventoPorAnimalPorTipoEvento(tipoEvento);
+	        eventosBruto = eventoDao.listarUltimoEventoPorAnimalPorTipoEvento(tipoEvento);
 	    }
 
-	    request.setAttribute("eventos", eventos);
+	    for (Object[] item : eventosBruto) {
+	        Evento evento = (Evento) item[0];
+	        Animal animal = (Animal) item[1];
+	        Endereco endereco = (Endereco) item[2];
+	        byte[] dadosFoto = (byte[]) item[3];
+	        String extensao = (String) item[4];
+
+	        String fotoBase64 = null;
+	        if (dadosFoto != null) {
+	            fotoBase64 = Base64.getEncoder().encodeToString(dadosFoto);
+	        }
+
+	        eventosComFotoBase64.add(new Object[]{evento, animal, endereco, fotoBase64, extensao});
+	    }
+
+	    request.setAttribute("eventos", eventosComFotoBase64);
 	    request.setAttribute("filtroSelecionado", tipoEvento);
 
 	    RequestDispatcher dispatcher = request.getRequestDispatcher("homepage.jsp");
 	    dispatcher.forward(request, response);
 	}
 
+
 	private void buscarPorCidade(HttpServletRequest request, HttpServletResponse response) 
 	        throws ServletException, IOException, SQLException {
 
 	    String cidade = request.getParameter("cidade");
-	    List<Object[]> eventos = new ArrayList<>();
+	    List<Object[]> eventosBruto = new ArrayList<>();
+	    List<Object[]> eventosComFotoBase64 = new ArrayList<>();
 
 	    if (cidade != null && !cidade.isEmpty()) {
-	        eventos = eventoDao.listarUltimoEventoPorAnimalPorCidade(cidade);
+	        eventosBruto = eventoDao.listarUltimoEventoPorAnimalPorCidade(cidade);
 	    }
 
-	    request.setAttribute("eventos", eventos);
+	    for (Object[] item : eventosBruto) {
+	        Evento evento = (Evento) item[0];
+	        Animal animal = (Animal) item[1];
+	        Endereco endereco = (Endereco) item[2];
+	        byte[] dadosFoto = (byte[]) item[3];
+	        String extensao = (String) item[4];
+
+	        String fotoBase64 = null;
+	        if (dadosFoto != null) {
+	            fotoBase64 = Base64.getEncoder().encodeToString(dadosFoto);
+	        }
+
+	        eventosComFotoBase64.add(new Object[]{evento, animal, endereco, fotoBase64, extensao});
+	    }
+
+	    request.setAttribute("eventos", eventosComFotoBase64);
 	    request.setAttribute("filtroSelecionado", cidade);
 
 	    RequestDispatcher dispatcher = request.getRequestDispatcher("homepage.jsp");
 	    dispatcher.forward(request, response);
 	}
+
 
 	private void buscarPorData(HttpServletRequest request, HttpServletResponse response) 
 	        throws ServletException, IOException, SQLException {

@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Cadastrar Adoção</title>
+  <title>Cadastrar Avistamento</title>
      <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/estilo.css?v=1" />
 
 </head>
@@ -18,9 +18,10 @@
 			<%@ include file="/assets/paginas/menuLogado.jsp"%>
 		</c:if>
 
-  <main class="form-container" role="main" aria-labelledby="formTitle">
-<!--<h1 id="formTitle" class="title">Cadastrar Adoção</h1> -->
- 	<form action="inserir-adocao" method="post" enctype="multipart/form-data">
+  		<main class="form-container" role="main" aria-labelledby="formTitle">
+
+ 		<form action="inserir-evento" method="post" enctype="multipart/form-data">
+
       
 
       <c:if test="${not empty sessionScope.usuarioLogado}">
@@ -28,8 +29,8 @@
       </c:if>
 		
 	  <!-- aqui define a descricao do tipo de evento -->
-        <input type="hidden" name="tipoEvento" value="Adocao">	
-
+        <input type="hidden" name="tipoEvento" value="Avistamento">	
+      <!-- id do Animal pela URL -->
 		 <input type="hidden" name="idAnimal" value="${animal.id}" />
 
 
@@ -61,24 +62,14 @@
 
       <!-- COLUNA 2 -->
       <section class="form-column" aria-labelledby="dadosAdocaoTitle">
-        <h2 id="dadosAdocaoTitle" class="subtitle">Dados da Adoção</h2>
+        <h2 id="dadosAdocaoTitle" class="subtitle">Dados ddo avistamento</h2>
 
-        <label for="dataEvento">Data da Adoção <span class="required">*</span></label>
+        <label for="dataEvento">Data do avistamento <span class="required">*</span></label>
         <input type="date" id="dataEvento" name="dataEvento" required />
 
         <label for="comentario">Comentário</label>
         <textarea id="comentario" name="comentario" rows="4"></textarea>
-
-        <h2 class="subtitle">Contato</h2>
-
-        <label for="telefone">Telefone</label>
-        <input type="text" id="telefone" name="telefone" placeholder="(00) 00000-0000" />
-
-        <label for="instagram">Instagram</label>
-        <input type="text" id="instagram" name="instagram" placeholder="@usuario" />
-        
-        
-        
+ 
         	
         <h2 class="subtitle">Animal</h2>
 

@@ -29,15 +29,19 @@
                 <p><strong>Cor:</strong> ${animal.cor}</p>
                 <p><strong>Porte:</strong> ${animal.porte}</p>
             </div>
-
+            
+            
+            
+           
 
             <c:if test="${not empty sessionScope.usuarioLogado}">
                 <div class="evento-menu">
                     <button class="botao" id="novoEventoBtn">Novo Evento</button>
                     <div id="opcoesEvento" class="opcoes hidden">
-                        <a class="botao" href="cadastro-evento?tipo=avistamento&idAnimal=${animal.id}">Avistamento</a>
-                        <a class="botao" href="cadastro-evento?tipo=resgate&idAnimal=${animal.id}">Resgate</a>
-                        <a class="botao" href="cadastro-evento?tipo=cadastro&idAnimal=${animal.id}">Cadastro</a>
+                    <a class="botao" href="cadastro-avistamento?idAnimal=${animal.id}">Avistamento</a>
+ 					<a class="botao" href="cadastro-resgate?idAnimal=${animal.id}">Resgate</a>
+					<a class="botao" href="cadastro-adocao?idAnimal=${animal.id}">Adoção</a>
+
                     </div>
                 </div>
             </c:if>
