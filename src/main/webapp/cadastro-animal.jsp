@@ -92,8 +92,9 @@
         <label for="comentario">Comentário</label>
         <textarea id="comentario" name="comentario" rows="4" placeholder="Digite um comentário sobre o evento"></textarea>
 
-		<label for="foto">Foto do Animal</label>
-		<input type="file" id="foto" name="foto" accept="image/*" />
+		<label for="foto">Foto do Animal <span aria-hidden="true" class="required">*</span></label>
+		<input type="file" id="foto" name="foto" accept="image/*" required />
+
 
 
         <button type="submit" class="botao" aria-label="Cadastrar evento e animal">Cadastrar</button>
